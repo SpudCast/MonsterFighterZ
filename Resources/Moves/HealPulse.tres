@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HealMove" load_steps=2 format=3 uid="uid://coxj8xm56ind1"]
+
+[ext_resource type="Script" path="res://Scripts/heal_move.gd" id="1_tilb8"]
+
+[resource]
+script = ExtResource("1_tilb8")
+heal_amount = 30
+name = "Heal Pulse"

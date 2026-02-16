@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Move" load_steps=2 format=3 uid="uid://dogrxx86u6prt"]
+
+[ext_resource type="Script" path="res://Scripts/move.gd" id="1_he47e"]
+
+[resource]
+script = ExtResource("1_he47e")
+name = "Outrage"
+damage = 120
+accuracy = 100.0

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DamageMove" load_steps=2 format=3 uid="uid://4rl6b3ox0en3"]
+
+[ext_resource type="Script" path="res://Scripts/damage_move.gd" id="1_k1op4"]
+
+[resource]
+script = ExtResource("1_k1op4")
+damage = 90
+anim_name = "enemy_hurt"
+name = "Tackle"

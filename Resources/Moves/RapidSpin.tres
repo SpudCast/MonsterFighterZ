@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Move" load_steps=2 format=3 uid="uid://bpq6o556lastt"]
+
+[ext_resource type="Script" path="res://Scripts/move.gd" id="1_c2brd"]
+
+[resource]
+script = ExtResource("1_c2brd")
+name = "Rapid Spin"
+damage = 60
+accuracy = 100.0

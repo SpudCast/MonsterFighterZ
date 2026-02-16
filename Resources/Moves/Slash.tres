@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Move" load_steps=2 format=3 uid="uid://bhgxl6k0vmbqg"]
+
+[ext_resource type="Script" path="res://Scripts/move.gd" id="1_0mhjh"]
+
+[resource]
+script = ExtResource("1_0mhjh")
+name = "Slash"
+damage = 50
+accuracy = 100.0

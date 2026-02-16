@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://co5diy06tgkeo"]
+
+[ext_resource type="Script" path="res://Scripts/BaseMon.gd" id="1_mod8q"]
+[ext_resource type="Resource" uid="uid://bhgxl6k0vmbqg" path="res://Resources/Moves/Slash.tres" id="1_nu1o4"]
+[ext_resource type="Texture2D" uid="uid://bx52rwlwtv1sh" path="res://Assets/haxorus.png" id="2_madek"]
+[ext_resource type="Resource" uid="uid://brd5wm5w7j1v8" path="res://Resources/Moves/Earthquake.tres" id="2_xnkm3"]
+[ext_resource type="Resource" uid="uid://bpq6o556lastt" path="res://Resources/Moves/RapidSpin.tres" id="3_8qeab"]
+[ext_resource type="Resource" uid="uid://dogrxx86u6prt" path="res://Resources/Moves/Outrage.tres" id="4_jmmqr"]
+
+[resource]
+script = ExtResource("1_mod8q")
+name = "Haxorus"
+texture = ExtResource("2_madek")
+health = 100
+moves = Array[Resource("res://Scripts/move.gd")]([ExtResource("1_nu1o4"), ExtResource("2_xnkm3"), ExtResource("3_8qeab"), ExtResource("4_jmmqr")])
+speed = 100

@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_k1op4")
-damage = 90
-anim_name = "enemy_hurt"
+damage = 40
+anim_name = ""
 name = "Tackle"

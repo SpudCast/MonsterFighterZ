@@ -14,7 +14,3 @@ config/name="PokeRipOff"
 run/main_scene="res://Scenes/battle.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://Assets/icon.svg"
-
-[autoload]
-
-State="*res://Scripts/State.gd"

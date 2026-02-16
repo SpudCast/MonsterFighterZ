@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="Move" load_steps=2 format=3 uid="uid://dogrxx86u6prt"]
+[gd_resource type="Resource" script_class="DamageMove" load_steps=2 format=3 uid="uid://cmnueeyut2jdp"]
 
-[ext_resource type="Script" path="res://Scripts/move.gd" id="1_he47e"]
+[ext_resource type="Script" path="res://Scripts/damage_move.gd" id="1_w5pp5"]
 
 [resource]
-script = ExtResource("1_he47e")
-name = "Outrage"
+script = ExtResource("1_w5pp5")
 damage = 120
-accuracy = 100.0
+anim_name = ""
+name = "Outrage"

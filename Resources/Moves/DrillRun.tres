@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="DamageMove" load_steps=2 format=3 uid="uid://cdgqq4uj2aa05"]
-
-[ext_resource type="Script" path="res://Scripts/damage_move.gd" id="1_pcd32"]
-
-[resource]
-script = ExtResource("1_pcd32")
-damage = 50
-anim_name = "enemy_hurt"
-name = "Drill Run"

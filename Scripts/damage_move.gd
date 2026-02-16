@@ -9,6 +9,5 @@ func use(attacker: Resource, defender: Resource, battle: Node) -> void:
 	await battle.textbox_closed
 	
 	await battle.apply_damage(defender, damage)
-	
 	if anim_name != "":
-		await battle.play_battle_anim(anim_name)
+		await battle.play_anim_safe(anim_name)

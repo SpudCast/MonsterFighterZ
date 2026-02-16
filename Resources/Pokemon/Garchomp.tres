@@ -1,0 +1,29 @@
+[gd_resource type="Resource" load_steps=8 format=3 uid="uid://c6en83tam1tvq"]
+
+[ext_resource type="Texture2D" uid="uid://drrxq5n02qamc" path="res://Assets/garchomp (1).png" id="1_6ur0i"]
+[ext_resource type="Script" path="res://Scripts/BaseMon.gd" id="1_p7tnt"]
+[ext_resource type="Resource" uid="uid://cobub0vifesn1" path="res://Resources/Moves/Earthquake.tres" id="2_y5ebd"]
+[ext_resource type="Resource" uid="uid://coxj8xm56ind1" path="res://Resources/Moves/HealPulse.tres" id="3_i3w8p"]
+[ext_resource type="Texture2D" uid="uid://t2wfj2blmwah" path="res://Assets/garchomp.png" id="3_qrht8"]
+[ext_resource type="Resource" uid="uid://cmnueeyut2jdp" path="res://Resources/Moves/Outrage.tres" id="4_p6elp"]
+[ext_resource type="Resource" uid="uid://4rl6b3ox0en3" path="res://Resources/Moves/Tackle.tres" id="5_7t36h"]
+
+[resource]
+script = ExtResource("1_p7tnt")
+name = "Garchomp"
+level = 100
+texture = ExtResource("3_qrht8")
+back_texture = ExtResource("1_6ur0i")
+base_health = 102
+base_attack = 130
+base_defense = 95
+base_speed = 102
+IV_health = 16
+IV_attack = 16
+IV_defense = 16
+IV_speed = 16
+EV_health = 6
+EV_attack = 151
+EV_defense = 0
+EV_speed = 151
+moves = Array[Resource("res://Scripts/move.gd")]([ExtResource("2_y5ebd"), ExtResource("3_i3w8p"), ExtResource("4_p6elp"), ExtResource("5_7t36h")])

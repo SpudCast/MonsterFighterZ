@@ -7,8 +7,13 @@ signal textbox_closed
 
 var current_player_health := 0
 var current_enemy_health := 0
+
+var player_max_health := 0
+var enemy_max_health := 0
+
 var ally_speed := 0
 var enemy_speed := 0
+
 
 const DEBUG := false
 
@@ -23,6 +28,16 @@ const DEBUG := false
 @onready var enemy_sprite: TextureRect = $EnemyContainer/Enemy
 @onready var move_buttons: Array = $"MovePanel/Actions".get_children()
 
+#Calculating Stats
+
+func calcHP(base, iv, ev, level):
+	var evTerm = floor(ev / 4)
+	return floor(((2*base + iv + evTerm) * level) / 100) + level + 10
+
+func calcStat(base, iv, ev, level):
+	var evTerm = floor(ev / 4)
+	var raw = floor(((2*base + iv + evTerm) * level) / 100) + 5
+	return raw
 
 func _ready() -> void:
 	randomize()
@@ -30,14 +45,18 @@ func _ready() -> void:
 	textbox.hide()
 	action_panel.hide()
 	move_panel.hide()
+	
+	current_player_health = calcHP(ally.base_health, ally.IV_health, ally.EV_health, ally.level)
+	current_enemy_health = calcHP(enemy.base_health, enemy.IV_health, enemy.EV_health, enemy.level)
+	
+	player_max_health = calcHP(ally.base_health, ally.IV_health, ally.EV_health, ally.level)
+	enemy_max_health = calcHP(enemy.base_health, enemy.IV_health, enemy.EV_health, enemy.level)
+	
+	ally_speed = calcStat(enemy.base_health, enemy.IV_health, enemy.EV_health, enemy.level)
+	enemy_speed = calcStat(enemy.base_speed, enemy.IV_speed, enemy.EV_speed, enemy.level)
 
-	current_player_health = ally.health
-	current_enemy_health = enemy.health
-	ally_speed = ally.speed
-	enemy_speed = enemy.speed
-
-	set_health(enemy_bar, current_enemy_health, enemy.health)
-	set_health(ally_bar, current_player_health, ally.health)
+	set_health(enemy_bar, current_enemy_health, enemy_max_health)
+	set_health(ally_bar, current_player_health, player_max_health)
 
 	enemy_sprite.texture = enemy.texture
 	ally_sprite.texture = ally.back_texture
@@ -121,21 +140,31 @@ func set_current_health(mon: Resource, value: int) -> void:
 
 
 func get_max_health(mon: Resource) -> int:
-	return ally.health if is_ally(mon) else enemy.health
+	return player_max_health if is_ally(mon) else enemy_max_health
 
 
 func update_health_bar(mon: Resource) -> void:
 	if is_ally(mon):
-		set_health(ally_bar, current_player_health, ally.health)
+		set_health(ally_bar, current_player_health, player_max_health)
 	else:
-		set_health(enemy_bar, current_enemy_health, enemy.health)
+		set_health(enemy_bar, current_enemy_health, enemy_max_health)
 
+func calc_dmg(power, attack, defense):
+	var def = max(1, defense)
+	var base = (power*attack)/def
+	var K := 0.2
+	var dmg = base * K
+	var roll = randf_range(0.85, 1.0)
+	return max(1, floor(dmg*roll))
 
-func apply_damage(target: Resource, amount: int) -> void:
+func apply_damage(attacker: Resource, target: Resource, amount: int) -> void:
 	var target_is_ally := is_ally(target)
 
 	var hp := get_current_health(target)
-	hp = max(0, hp - amount)
+	var atk = calcStat(attacker.base_attack, attacker.IV_attack, attacker.EV_attack, attacker.level)
+	var def = calcStat(target.base_defense, target.IV_defense, target.EV_defense, target.level)
+	var damage = calc_dmg(amount, atk, def)
+	hp = max(0, hp - damage)
 	set_current_health(target, hp)
 	update_health_bar(target)
 

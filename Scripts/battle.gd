@@ -52,7 +52,7 @@ func _ready() -> void:
 	player_max_health = calcHP(ally.base_health, ally.IV_health, ally.EV_health, ally.level)
 	enemy_max_health = calcHP(enemy.base_health, enemy.IV_health, enemy.EV_health, enemy.level)
 	
-	ally_speed = calcStat(enemy.base_health, enemy.IV_health, enemy.EV_health, enemy.level)
+	ally_speed = calcStat(ally.base_health, ally.IV_health, ally.EV_health, ally.level)
 	enemy_speed = calcStat(enemy.base_speed, enemy.IV_speed, enemy.EV_speed, enemy.level)
 
 	set_health(enemy_bar, current_enemy_health, enemy_max_health)
@@ -149,22 +149,38 @@ func update_health_bar(mon: Resource) -> void:
 	else:
 		set_health(enemy_bar, current_enemy_health, enemy_max_health)
 
-func calc_dmg(power, attack, defense):
-	var def = max(1, defense)
-	var base = (power*attack)/def
-	var K := 0.2
+func calc_damage(power, attack, defense):
+	var defense_stat = max(1, defense)
+	var base = (power*attack)/defense_stat
+	var K := 0.85
 	var dmg = base * K
 	var roll = randf_range(0.85, 1.0)
-	return max(1, floor(dmg*roll))
+	return max(1, int(dmg*roll))
 
-func apply_damage(attacker: Resource, target: Resource, amount: int) -> void:
+func apply_damage(attacker: Resource, target: Resource, move_power: int, move_type: int) -> void:
 	var target_is_ally := is_ally(target)
 
 	var hp := get_current_health(target)
+	
 	var atk = calcStat(attacker.base_attack, attacker.IV_attack, attacker.EV_attack, attacker.level)
 	var def = calcStat(target.base_defense, target.IV_defense, target.EV_defense, target.level)
-	var damage = calc_dmg(amount, atk, def)
-	hp = max(0, hp - damage)
+	
+	var raw_damage = calc_damage(move_power, atk, def)
+	
+	var type_mult := TypeChart.get_multiplier(move_type, target.types)
+	var stab := TypeChart.get_stab(move_type, attacker.types)
+	
+	var final_damage := int(raw_damage * stab * type_mult)
+	
+	var msg := TypeChart.get_effectiveness_text(type_mult)
+	if msg != "":
+		display_text(msg)
+		await textbox_closed
+	if type_mult == 0.0:
+		final_damage = 0
+	print(hp)
+	print(final_damage)
+	hp = max(0, hp - final_damage)
 	set_current_health(target, hp)
 	update_health_bar(target)
 

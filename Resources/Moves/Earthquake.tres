@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_cbog0")
-damage = 100
+move_power = 100
 anim_name = ""
 name = "Earthquake"
+move_type = 8

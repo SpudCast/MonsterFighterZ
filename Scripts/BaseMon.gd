@@ -1,6 +1,7 @@
 extends Resource
 
 @export var name: String = "pokemon"
+@export var types: Array[TypeChart.Type] = [TypeChart.Type.NORMAL]
 @export_range(1, 100) var level: int
 
 @export var texture: Texture2D

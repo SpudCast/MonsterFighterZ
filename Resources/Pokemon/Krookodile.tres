@@ -11,26 +11,20 @@
 [resource]
 script = ExtResource("6_m51te")
 name = "Krookodile"
+types = Array[int]([0])
 level = 0
-nature = ""
 texture = ExtResource("7_6jy8x")
 back_texture = ExtResource("1_k12s0")
 base_health = 0
 base_attack = 0
 base_defense = 0
-base_special_attack = 0
-base_special_defense = 0
 base_speed = 0
 IV_health = 0
 IV_attack = 0
 IV_defense = 0
-IV_special_attack = 0
-IV_special_defense = 0
 IV_speed = 0
 EV_health = 0
 EV_attack = 0
 EV_defense = 0
-EV_special_attack = 0
-EV_special_defense = 0
 EV_speed = 0
 moves = Array[Resource("res://Scripts/move.gd")]([ExtResource("2_vs8b8"), ExtResource("3_3ijlr"), ExtResource("4_0kcce"), ExtResource("5_th6f8")])

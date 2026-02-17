@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_k1op4")
-damage = 40
+move_power = 40
 anim_name = ""
 name = "Tackle"
+move_type = 0

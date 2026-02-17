@@ -11,6 +11,7 @@
 [resource]
 script = ExtResource("1_p7tnt")
 name = "Garchomp"
+types = Array[int]([14, 8])
 level = 100
 texture = ExtResource("3_qrht8")
 back_texture = ExtResource("1_6ur0i")

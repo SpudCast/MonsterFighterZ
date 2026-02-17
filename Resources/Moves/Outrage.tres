@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_w5pp5")
-damage = 120
+move_power = 120
 anim_name = ""
 name = "Outrage"
+move_type = 14

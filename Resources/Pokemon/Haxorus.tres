@@ -11,6 +11,7 @@
 [resource]
 script = ExtResource("1_mod8q")
 name = "Haxorus"
+types = Array[int]([14])
 level = 100
 texture = ExtResource("2_madek")
 back_texture = ExtResource("1_tdlu7")
@@ -23,7 +24,7 @@ IV_attack = 16
 IV_defense = 16
 IV_speed = 16
 EV_health = 151
-EV_attack = 0
-EV_defense = 151
-EV_speed = 6
+EV_attack = 151
+EV_defense = 6
+EV_speed = 0
 moves = Array[Resource("res://Scripts/move.gd")]([ExtResource("2_xnkm3"), ExtResource("2_iak0p"), ExtResource("4_jmmqr"), ExtResource("1_yyimj")])

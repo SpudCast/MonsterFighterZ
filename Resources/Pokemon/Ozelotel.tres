@@ -1,0 +1,30 @@
+[gd_resource type="Resource" load_steps=8 format=3 uid="uid://yfemcrvm5wgr"]
+
+[ext_resource type="Texture2D" uid="uid://dyodcywvwile3" path="res://Assets/Ozelotel_Front.png" id="1_dlhvo"]
+[ext_resource type="Resource" uid="uid://cobub0vifesn1" path="res://Resources/Moves/Earthquake.tres" id="2_t050s"]
+[ext_resource type="Resource" uid="uid://cmnueeyut2jdp" path="res://Resources/Moves/Outrage.tres" id="3_pwjet"]
+[ext_resource type="Resource" uid="uid://4rl6b3ox0en3" path="res://Resources/Moves/Tackle.tres" id="4_klxnr"]
+[ext_resource type="Resource" uid="uid://coxj8xm56ind1" path="res://Resources/Moves/HealPulse.tres" id="5_p62bk"]
+[ext_resource type="Script" path="res://Scripts/BaseMon.gd" id="6_rpqpy"]
+[ext_resource type="Texture2D" uid="uid://uymmvgd6u2di" path="res://Assets/Ozelotel_Back.png" id="7_crqj7"]
+
+[resource]
+script = ExtResource("6_rpqpy")
+name = "Ozelotel"
+types = Array[int]([15, 0])
+level = 50
+texture = ExtResource("1_dlhvo")
+back_texture = ExtResource("7_crqj7")
+base_health = 70
+base_attack = 95
+base_defense = 65
+base_speed = 80
+IV_health = 16
+IV_attack = 16
+IV_defense = 16
+IV_speed = 16
+EV_health = 151
+EV_attack = 151
+EV_defense = 0
+EV_speed = 3
+moves = Array[Resource("res://Scripts/move.gd")]([ExtResource("2_t050s"), ExtResource("3_pwjet"), ExtResource("4_klxnr"), ExtResource("5_p62bk")])

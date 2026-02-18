@@ -1,37 +1,23 @@
-[gd_scene load_steps=15 format=3 uid="uid://djgtaewrhqfsp"]
+[gd_scene load_steps=17 format=3 uid="uid://djgtaewrhqfsp"]
 
 [ext_resource type="Script" path="res://Scripts/battle.gd" id="1_4lqdi"]
-[ext_resource type="Resource" uid="uid://co5diy06tgkeo" path="res://Resources/Pokemon/Haxorus.tres" id="2_tlxaw"]
+[ext_resource type="Resource" uid="uid://b7uoad3u4lon4" path="res://Resources/Pokemon/Moosigo.tres" id="3_7hfpx"]
 [ext_resource type="Texture2D" uid="uid://bx52rwlwtv1sh" path="res://Assets/haxorus.png" id="3_dddu2"]
-[ext_resource type="Resource" uid="uid://c6en83tam1tvq" path="res://Resources/Pokemon/Garchomp.tres" id="3_w3s2q"]
+[ext_resource type="Texture2D" uid="uid://dfljhpteoarfu" path="res://Assets/background4.png" id="3_v1vqk"]
 [ext_resource type="Texture2D" uid="uid://dry2488vj04hy" path="res://Assets/krookodile.png" id="4_hahno"]
-[ext_resource type="Texture2D" uid="uid://bnf1lpgherydp" path="res://Assets/Background.png" id="4_l8t0n"]
+[ext_resource type="Texture2D" uid="uid://b2vjcj78i3swx" path="res://Assets/hud.png" id="6_mdhps"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3wnfg"]
-bg_color = Color(0.972549, 0, 0, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-corner_detail = 2
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3fwri"]
+bg_color = Color(0.92549, 0, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sv6su"]
-bg_color = Color(0, 1, 0, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-corner_detail = 2
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c431m"]
+bg_color = Color(0, 0.8, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5taav"]
+bg_color = Color(0.92549, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vi1ml"]
+bg_color = Color(0, 0.8, 0, 1)
 
 [sub_resource type="Animation" id="Animation_qol6p"]
 length = 0.001
@@ -141,36 +127,126 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4lqdi")
-enemy = ExtResource("2_tlxaw")
-ally = ExtResource("3_w3s2q")
+enemy = ExtResource("3_7hfpx")
+ally = ExtResource("3_7hfpx")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Background2" type="TextureRect" parent="Background"]
+texture_filter = 1
 layout_mode = 0
 offset_top = 1.0
 offset_right = 1152.0
 offset_bottom = 649.0
-texture = ExtResource("4_l8t0n")
+texture = ExtResource("3_v1vqk")
 expand_mode = 1
+
+[node name="EnemyHud" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HudBackground" type="TextureRect" parent="EnemyHud"]
+layout_mode = 2
+offset_left = -1.0
+offset_top = 1.0
+offset_right = 398.0
+offset_bottom = 134.0
+texture = ExtResource("6_mdhps")
+
+[node name="EnemyHealth" type="ProgressBar" parent="EnemyHud"]
+layout_mode = 2
+offset_left = 73.0
+offset_top = 80.0
+offset_right = 343.0
+offset_bottom = 100.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_3fwri")
+theme_override_styles/fill = SubResource("StyleBoxFlat_c431m")
+max_value = 1000.0
+value = 50.0
+
+[node name="Name" type="Label" parent="EnemyHud"]
+layout_mode = 0
+offset_left = 46.0
+offset_top = 28.0
+offset_right = 158.0
+offset_bottom = 56.0
+text = "[NAME] "
+
+[node name="Level" type="Label" parent="EnemyHud"]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 53.0
+offset_right = 237.0
+offset_bottom = 76.0
+text = "lvl: [level]"
+
+[node name="AllyHud" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 754.0
+offset_top = 400.0
+offset_right = 794.0
+offset_bottom = 440.0
+
+[node name="HudBackground" type="TextureRect" parent="AllyHud"]
+layout_mode = 2
+offset_left = -1.0
+offset_right = 398.0
+offset_bottom = 133.0
+texture = ExtResource("6_mdhps")
+
+[node name="AllyHealth" type="ProgressBar" parent="AllyHud"]
+texture_filter = 1
+custom_minimum_size = Vector2(60, 4)
+layout_mode = 2
+offset_left = 77.0
+offset_top = 76.0
+offset_right = 347.0
+offset_bottom = 96.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_5taav")
+theme_override_styles/fill = SubResource("StyleBoxFlat_vi1ml")
+max_value = 1000.0
+value = 50.0
+
+[node name="Name" type="Label" parent="AllyHud"]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 27.0
+offset_right = 157.0
+offset_bottom = 55.0
+text = "[NAME] "
+
+[node name="Level" type="Label" parent="AllyHud"]
+layout_mode = 0
+offset_left = 44.0
+offset_top = 52.0
+offset_right = 236.0
+offset_bottom = 75.0
+text = "lvl: [level]"
 
 [node name="EnemyContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 786.0
-offset_top = 107.0
-offset_right = 882.0
-offset_bottom = 238.0
+offset_left = 766.0
+offset_top = 135.0
+offset_right = 862.0
+offset_bottom = 266.0
 scale = Vector2(2, 2)
 size_flags_horizontal = 4
 size_flags_vertical = 8
-
-[node name="EnemyHealth" type="ProgressBar" parent="EnemyContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 5
-theme_override_styles/background = SubResource("StyleBoxFlat_3wnfg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_sv6su")
-max_value = 1000.0
-value = 50.0
 
 [node name="Enemy" type="TextureRect" parent="EnemyContainer"]
 texture_filter = 1
@@ -179,22 +255,13 @@ texture = ExtResource("3_dddu2")
 stretch_mode = 2
 
 [node name="AllyContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 0
-offset_left = 82.0
-offset_top = 141.0
-offset_right = 178.0
-offset_bottom = 272.0
+offset_left = 153.0
+offset_top = 151.0
+offset_right = 253.0
+offset_bottom = 282.0
 scale = Vector2(4, 4)
-
-[node name="AllyHealth" type="ProgressBar" parent="AllyContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 3
-theme_override_styles/background = SubResource("StyleBoxFlat_3wnfg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_sv6su")
-max_value = 1000.0
-value = 50.0
 
 [node name="Ally" type="TextureRect" parent="AllyContainer"]
 texture_filter = 1
@@ -203,10 +270,10 @@ texture = ExtResource("4_hahno")
 
 [node name="ActionPanel" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 2.0
+offset_left = -17.0
 offset_top = 535.0
-offset_right = 1151.0
-offset_bottom = 649.0
+offset_right = 1166.0
+offset_bottom = 656.0
 
 [node name="Actions" type="HBoxContainer" parent="ActionPanel"]
 layout_mode = 1
@@ -244,10 +311,10 @@ text = "Run"
 
 [node name="MovePanel" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 2.0
+offset_left = -11.0
 offset_top = 534.0
 offset_right = 1161.0
-offset_bottom = 649.0
+offset_bottom = 651.0
 
 [node name="Actions" type="HBoxContainer" parent="MovePanel"]
 layout_mode = 1
@@ -282,8 +349,10 @@ text = "Move 4"
 
 [node name="Textbox" type="Panel" parent="."]
 layout_mode = 0
-offset_right = 1161.0
-offset_bottom = 106.0
+offset_left = -1.0
+offset_top = 533.0
+offset_right = 1163.0
+offset_bottom = 655.0
 
 [node name="Label" type="Label" parent="Textbox"]
 layout_mode = 1
@@ -298,7 +367,7 @@ offset_right = 120.5
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 15
 text = "A wild HAXORUS has appeared!"
 
 [node name="Ticker" type="Label" parent="Textbox"]

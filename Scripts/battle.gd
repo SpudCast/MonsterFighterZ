@@ -22,11 +22,15 @@ const DEBUG := false
 @onready var action_panel: Control = $ActionPanel
 @onready var move_panel: Control = $MovePanel
 @onready var anim: AnimationPlayer = $AnimationPlayer
-@onready var ally_bar: ProgressBar = $AllyContainer/AllyHealth
-@onready var enemy_bar: ProgressBar = $EnemyContainer/EnemyHealth
+@onready var ally_bar: ProgressBar = $AllyHud/AllyHealth
+@onready var enemy_bar: ProgressBar = $EnemyHud/EnemyHealth
 @onready var ally_sprite: TextureRect = $AllyContainer/Ally
 @onready var enemy_sprite: TextureRect = $EnemyContainer/Enemy
 @onready var move_buttons: Array = $"MovePanel/Actions".get_children()
+@onready var ally_name: Label = $AllyHud/Name
+@onready var ally_level: Label = $AllyHud/Level
+@onready var enemy_name: Label = $EnemyHud/Name
+@onready var enemy_level: Label = $EnemyHud/Level
 
 #Calculating Stats
 
@@ -41,10 +45,19 @@ func calcStat(base, iv, ev, level):
 
 func _ready() -> void:
 	randomize()
-
+	
+	ally = ally.duplicate(true)
+	enemy = enemy.duplicate(true)
+	
 	textbox.hide()
 	action_panel.hide()
 	move_panel.hide()
+	
+	ally_name.text = ally.name
+	enemy_name.text = enemy.name
+	
+	ally_level.text = ("lvl: %s" % ally.level)
+	enemy_level.text = ("lvl: %s" % enemy.level)
 	
 	current_player_health = calcHP(ally.base_health, ally.IV_health, ally.EV_health, ally.level)
 	current_enemy_health = calcHP(enemy.base_health, enemy.IV_health, enemy.EV_health, enemy.level)

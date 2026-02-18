@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bnf1lpgherydp"
-path="res://.godot/imported/background.png-c6e0edb6ae00a576ddf31b14f0c4bf17.ctex"
+uid="uid://bgx6chib6yg6e"
+path="res://.godot/imported/Moosigo_Back.png-324a44aac3ca0d515076e151c25aaac9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/background.png"
-dest_files=["res://.godot/imported/background.png-c6e0edb6ae00a576ddf31b14f0c4bf17.ctex"]
+source_file="res://Assets/Moosigo_Back.png"
+dest_files=["res://.godot/imported/Moosigo_Back.png-324a44aac3ca0d515076e151c25aaac9.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bnf1lpgherydp"
-path="res://.godot/imported/background.png-c6e0edb6ae00a576ddf31b14f0c4bf17.ctex"
+uid="uid://uymmvgd6u2di"
+path="res://.godot/imported/Ozelotel_Back.png-0d8556243b12ba86d8c582488ca106b0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/background.png"
-dest_files=["res://.godot/imported/background.png-c6e0edb6ae00a576ddf31b14f0c4bf17.ctex"]
+source_file="res://Assets/Ozelotel_Back.png"
+dest_files=["res://.godot/imported/Ozelotel_Back.png-0d8556243b12ba86d8c582488ca106b0.ctex"]
 
 [params]
 

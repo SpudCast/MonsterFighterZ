@@ -1,9 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://djgtaewrhqfsp"]
+[gd_scene load_steps=20 format=3 uid="uid://djgtaewrhqfsp"]
 
 [ext_resource type="Script" path="res://Scripts/battle.gd" id="1_4lqdi"]
 [ext_resource type="Resource" uid="uid://b7uoad3u4lon4" path="res://Resources/Pokemon/Moosigo.tres" id="3_7hfpx"]
 [ext_resource type="Texture2D" uid="uid://bx52rwlwtv1sh" path="res://Assets/haxorus.png" id="3_dddu2"]
 [ext_resource type="Texture2D" uid="uid://dry2488vj04hy" path="res://Assets/krookodile.png" id="4_hahno"]
+[ext_resource type="Resource" uid="uid://ddfbyg1i6r1q8" path="res://Resources/Pokemon/Amperegrine.tres" id="4_jiyhj"]
 [ext_resource type="Resource" uid="uid://yfemcrvm5wgr" path="res://Resources/Pokemon/Ozelotel.tres" id="4_pqskv"]
 [ext_resource type="Texture2D" uid="uid://bnf1lpgherydp" path="res://Assets/background.png" id="5_tt2ba"]
 [ext_resource type="Texture2D" uid="uid://bj2pv0xu4qn4a" path="res://Assets/GrassPatch.png" id="6_fcokw"]
@@ -150,7 +151,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4lqdi")
-ally_team = Array[Resource]([ExtResource("3_7hfpx"), ExtResource("4_pqskv")])
+ally_team = Array[Resource]([ExtResource("3_7hfpx"), ExtResource("4_pqskv"), ExtResource("4_jiyhj")])
 enemy_team = Array[Resource]([ExtResource("4_pqskv"), ExtResource("3_7hfpx")])
 
 [node name="Background" type="Control" parent="."]
@@ -185,25 +186,26 @@ texture = ExtResource("6_fcokw")
 
 [node name="EnemyHud" type="Control" parent="."]
 anchors_preset = 0
-offset_left = 11.0
-offset_top = 8.0
-offset_right = 51.0
-offset_bottom = 48.0
+offset_left = -23.0
+offset_top = 14.0
+offset_right = 17.0
+offset_bottom = 54.0
 
 [node name="HudBackground" type="TextureRect" parent="EnemyHud"]
 layout_mode = 2
-offset_left = -1.0
-offset_top = 1.0
-offset_right = 398.0
-offset_bottom = 134.0
+offset_left = 33.0
+offset_top = -2.0
+offset_right = 77.0
+offset_bottom = 18.0
+scale = Vector2(7, 7)
 texture = ExtResource("6_mdhps")
 
 [node name="EnemyHealth" type="ProgressBar" parent="EnemyHud"]
 layout_mode = 2
-offset_left = 73.0
-offset_top = 80.0
-offset_right = 343.0
-offset_bottom = 100.0
+offset_left = 48.0
+offset_top = 77.0
+offset_right = 318.0
+offset_bottom = 108.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -217,9 +219,9 @@ value = 50.0
 [node name="Name" type="Label" parent="EnemyHud"]
 layout_mode = 0
 offset_left = 46.0
-offset_top = 28.0
+offset_top = 26.0
 offset_right = 158.0
-offset_bottom = 56.0
+offset_bottom = 55.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 text = "[NAME] "
@@ -237,26 +239,28 @@ text = "lvl: [level]"
 [node name="AllyHud" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 744.0
-offset_top = 382.0
-offset_right = 784.0
-offset_bottom = 422.0
+offset_left = 804.0
+offset_top = 379.0
+offset_right = 844.0
+offset_bottom = 419.0
 
 [node name="HudBackground" type="TextureRect" parent="AllyHud"]
 layout_mode = 2
-offset_left = -1.0
-offset_right = 398.0
-offset_bottom = 133.0
+offset_left = 26.0
+offset_top = -5.0
+offset_right = 70.0
+offset_bottom = 15.0
+scale = Vector2(7, 7)
 texture = ExtResource("6_mdhps")
 
 [node name="AllyHealth" type="ProgressBar" parent="AllyHud"]
 texture_filter = 1
 custom_minimum_size = Vector2(60, 4)
 layout_mode = 2
-offset_left = 77.0
-offset_top = 76.0
-offset_right = 347.0
-offset_bottom = 96.0
+offset_left = 43.0
+offset_top = 73.0
+offset_right = 313.0
+offset_bottom = 104.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -269,10 +273,10 @@ value = 50.0
 
 [node name="Name" type="Label" parent="AllyHud"]
 layout_mode = 0
-offset_left = 45.0
-offset_top = 27.0
-offset_right = 157.0
-offset_bottom = 55.0
+offset_left = 46.0
+offset_top = 26.0
+offset_right = 158.0
+offset_bottom = 54.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 text = "[NAME] "
@@ -394,6 +398,51 @@ text = "Move 3"
 layout_mode = 2
 text = "Move 4"
 
+[node name="SwitchPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_top = 528.0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="Actions" type="HBoxContainer" parent="SwitchPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -106.0
+offset_top = -15.5
+offset_right = 106.0
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="Mon1" type="Button" parent="SwitchPanel/Actions"]
+layout_mode = 2
+text = "Mon 1"
+
+[node name="Mon2" type="Button" parent="SwitchPanel/Actions"]
+layout_mode = 2
+text = "Mon 2"
+
+[node name="Mon3" type="Button" parent="SwitchPanel/Actions"]
+layout_mode = 2
+text = "Mon 3"
+
+[node name="Mon4" type="Button" parent="SwitchPanel/Actions"]
+layout_mode = 2
+text = "Mon 4"
+
+[node name="Mon5" type="Button" parent="SwitchPanel/Actions"]
+layout_mode = 2
+text = "Mon 5"
+
+[node name="Mon6" type="Button" parent="SwitchPanel/Actions"]
+layout_mode = 2
+text = "Mon 6"
+
 [node name="Textbox" type="Panel" parent="."]
 layout_mode = 0
 offset_top = 528.0
@@ -439,6 +488,7 @@ libraries = {
 }
 
 [connection signal="pressed" from="ActionPanel/Actions/Attack" to="." method="_on_attack_pressed"]
+[connection signal="pressed" from="ActionPanel/Actions/Switch" to="." method="_on_switch_pressed"]
 [connection signal="pressed" from="ActionPanel/Actions/Run" to="." method="_on_run_pressed"]
 [connection signal="pressed" from="MovePanel/Actions/Move 1" to="." method="_on_move_1_pressed"]
 [connection signal="pressed" from="MovePanel/Actions/Move 2" to="." method="_on_move_2_pressed"]

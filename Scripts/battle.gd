@@ -1,6 +1,7 @@
 extends Control
 
 signal textbox_closed
+signal forced_switch_done
 
 @export var ally_team: Array[Resource] = []
 @export var enemy_team: Array[Resource] = []
@@ -21,16 +22,68 @@ const DEBUG := false
 @onready var textbox_label: Label = $Textbox/Label
 @onready var action_panel: Control = $ActionPanel
 @onready var move_panel: Control = $MovePanel
+@onready var switch_panel: Control = $SwitchPanel
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var ally_bar: ProgressBar = $AllyHud/AllyHealth
 @onready var enemy_bar: ProgressBar = $EnemyHud/EnemyHealth
 @onready var ally_sprite: TextureRect = $AllyContainer/Ally
 @onready var enemy_sprite: TextureRect = $EnemyContainer/Enemy
 @onready var move_buttons: Array = $"MovePanel/Actions".get_children()
+@onready var switch_buttons: Array = $"SwitchPanel/Actions".get_children()
 @onready var ally_name: Label = $AllyHud/Name
 @onready var ally_level: Label = $AllyHud/Level
 @onready var enemy_name: Label = $EnemyHud/Name
 @onready var enemy_level: Label = $EnemyHud/Level
+
+# Prevent accidental double-press / re-entry
+var turn_busy := false
+
+# True only when a mon fainted and player MUST choose replacement.
+# In this mode, switching does NOT trigger enemy_turn().
+var forcing_switch := false
+
+
+# ----------------------------
+# Turn lock helpers
+# ----------------------------
+
+func _try_lock_turn() -> bool:
+	if turn_busy:
+		return false
+	turn_busy = true
+	return true
+
+func _unlock_turn() -> void:
+	turn_busy = false
+
+
+# ----------------------------
+# UI visibility helpers (NO OVERLAP)
+# Exactly ONE of: textbox/action/move/switch is visible at a time.
+# ----------------------------
+
+func hide_all_panels() -> void:
+	textbox.hide()
+	action_panel.hide()
+	move_panel.hide()
+	switch_panel.hide()
+
+func show_action_panel() -> void:
+	hide_all_panels()
+	action_panel.show()
+
+func show_move_panel() -> void:
+	hide_all_panels()
+	move_panel.show()
+
+func show_switch_panel() -> void:
+	hide_all_panels()
+	switch_panel.show()
+
+func show_textbox(text: String) -> void:
+	hide_all_panels()
+	textbox.show()
+	textbox_label.text = text
 
 
 # ----------------------------
@@ -56,10 +109,7 @@ func get_speed(mon: Resource) -> int:
 
 func _ready() -> void:
 	randomize()
-
-	textbox.hide()
-	action_panel.hide()
-	move_panel.hide()
+	hide_all_panels()
 
 	if ally_team.is_empty() or enemy_team.is_empty():
 		push_error("Ally team and Enemy team must each have at least 1 monster.")
@@ -106,19 +156,43 @@ func _ready() -> void:
 
 	setup_active_ui()
 
-	display_text("a wild enemy appears")
-	await textbox_closed
-	action_panel.show()
+	# Safe connect: avoids double-connection if also connected in editor.
+	for i in range(switch_buttons.size()):
+		var btn: Button = switch_buttons[i]
+		var cb := Callable(self, "_on_switch_button_pressed").bind(i)
+		if not btn.pressed.is_connected(cb):
+			btn.pressed.connect(cb)
 
+	display_text("a wild %s appears" % enemy_active.name)
+	await textbox_closed
+	show_action_panel()
+
+
+# ----------------------------
+# Helpers
+# ----------------------------
+
+func can_switch_now() -> bool:
+	for i in range(ally_team.size()):
+		if ally_team[i] != null and ally_hp[i] > 0 and i != ally_active_idx:
+			return true
+	return false
+
+
+# ----------------------------
+# Find next alive (wrap-around)
+# ----------------------------
 
 func find_next_alive_ally(from_idx: int) -> int:
-	for i in range(from_idx + 1, ally_team.size()):
+	for offset in range(1, ally_team.size() + 1):
+		var i := (from_idx + offset) % ally_team.size()
 		if ally_team[i] != null and ally_hp[i] > 0:
 			return i
 	return -1
 
 func find_next_alive_enemy(from_idx: int) -> int:
-	for i in range(from_idx + 1, enemy_team.size()):
+	for offset in range(1, enemy_team.size() + 1):
+		var i := (from_idx + offset) % enemy_team.size()
 		if enemy_team[i] != null and enemy_hp[i] > 0:
 			return i
 	return -1
@@ -157,15 +231,32 @@ func set_move_buttons_for_active() -> void:
 			btn.text = "-"
 			btn.disabled = true
 
+func refresh_switch_buttons() -> void:
+	for i in range(switch_buttons.size()):
+		var btn: Button = switch_buttons[i]
+
+		if i >= ally_team.size():
+			btn.text = "-"
+			btn.disabled = true
+			continue
+
+		var mon = ally_team[i]
+		if mon == null:
+			btn.text = "-"
+			btn.disabled = true
+			continue
+
+		btn.text = "%s (%d/%d)" % [mon.name, ally_hp[i], ally_max_hp[i]]
+		btn.disabled = (ally_hp[i] <= 0) or (i == ally_active_idx)
+
 
 # ----------------------------
-# Textbox
+# Textbox (NO OVERLAP)
 # ----------------------------
 
 func display_text(text: String) -> void:
 	if DEBUG: print("DISPLAY:", text)
-	textbox.show()
-	textbox_label.text = text
+	show_textbox(text)
 
 func close_textbox() -> void:
 	if not textbox.visible:
@@ -241,6 +332,62 @@ func update_health_bar(mon: Resource) -> void:
 
 
 # ----------------------------
+# Switching
+# ----------------------------
+
+func _on_switch_button_pressed(i: int) -> void:
+	if not _try_lock_turn():
+		return
+
+	# Validation
+	if i < 0 or i >= ally_team.size():
+		_unlock_turn()
+		return
+	if ally_team[i] == null:
+		display_text("No monster in that slot!")
+		await textbox_closed
+		_unlock_turn()
+		return
+	if ally_hp[i] <= 0:
+		display_text("%s has fainted!" % ally_team[i].name)
+		await textbox_closed
+		_unlock_turn()
+		return
+	if i == ally_active_idx:
+		display_text("%s is already out!" % ally_team[i].name)
+		await textbox_closed
+		_unlock_turn()
+		return
+
+	hide_all_panels()
+
+	ally_active_idx = i
+	ally_active = ally_team[ally_active_idx]
+	setup_active_ui()
+
+	display_text("Go, %s!" % ally_active.name)
+	await textbox_closed
+
+	if forcing_switch:
+		forcing_switch = false
+		emit_signal("forced_switch_done")
+		show_action_panel()
+		_unlock_turn()
+		return
+
+	# Voluntary switch costs your turn
+	await enemy_turn()
+
+	var ended := await handle_faint_and_stop_turn()
+	if ended:
+		_unlock_turn()
+		return
+
+	show_action_panel()
+	_unlock_turn()
+
+
+# ----------------------------
 # Damage / Heal (called by Move.use)
 # ----------------------------
 
@@ -296,15 +443,11 @@ func apply_heal(target: Resource, amount: int) -> void:
 
 
 # ----------------------------
-# Faint handling (NO "free move" after switch)
-# Returns true if battle ends.
-# IMPORTANT CHANGE:
-#   If someone faints, we switch them in and then STOP the turn so nobody
-#   immediately attacks the newly-switched-in mon.
+# Faint handling
 # ----------------------------
 
 func check_and_handle_faint() -> bool:
-	# Enemy faint -> switch or win (then stop)
+	# Enemy faint -> switch or win
 	if enemy_hp[enemy_active_idx] <= 0:
 		display_text("%s fainted!" % enemy_active.name)
 		await textbox_closed
@@ -321,29 +464,31 @@ func check_and_handle_faint() -> bool:
 		display_text("Enemy sent out %s!" % enemy_active.name)
 		await textbox_closed
 		setup_active_ui()
-
-		# STOP: end the turn here (prevents immediate move)
 		return false
 
-	# Ally faint -> switch or lose (then stop)
+	# Ally faint -> player chooses replacement
 	if ally_hp[ally_active_idx] <= 0:
 		display_text("%s fainted!" % ally_active.name)
 		await textbox_closed
 
-		var next_ally := find_next_alive_ally(ally_active_idx)
-		if next_ally == -1:
+		if not can_switch_now():
 			display_text("you have been defeated by the enemy team")
 			await textbox_closed
 			get_tree().quit()
 			return true
 
-		ally_active_idx = next_ally
-		ally_active = ally_team[ally_active_idx]
-		display_text("Go, %s!" % ally_active.name)
-		await textbox_closed
-		setup_active_ui()
+		# Ensure forced-switch buttons will respond
+		_unlock_turn()
 
-		# STOP: end the turn here (prevents immediate move)
+		# Tell player first (textbox), then show switch panel (NO overlap).
+		display_text("Choose a monster to send out!")
+		await textbox_closed
+
+		forcing_switch = true
+		refresh_switch_buttons()
+		show_switch_panel()
+
+		await forced_switch_done
 		return false
 
 	return false
@@ -351,19 +496,15 @@ func check_and_handle_faint() -> bool:
 
 # ----------------------------
 # Turn handling
-# IMPORTANT CHANGE:
-#   We end the turn if a faint happens on either action, so the next turn starts
-#   with the action menu (no "free move" into the new mon).
 # ----------------------------
 
 func do_turn(move_num: int) -> void:
-	action_panel.hide()
-	move_panel.hide()
+	hide_all_panels()
 
 	if move_num < 0 or move_num >= ally_active.moves.size() or ally_active.moves[move_num] == null:
 		display_text("That move slot is empty!")
 		await textbox_closed
-		action_panel.show()
+		show_action_panel()
 		return
 
 	var ally_speed := get_speed(ally_active)
@@ -374,49 +515,42 @@ func do_turn(move_num: int) -> void:
 	if ally_first:
 		await ally_active.moves[move_num].use(ally_active, enemy_active, self)
 
-		# If enemy fainted and switched, stop turn here
 		if enemy_hp[enemy_active_idx] <= 0:
 			var ended = await handle_faint_and_stop_turn()
 			if ended: return
-			action_panel.show()
+			show_action_panel()
 			return
 
 		await enemy_turn()
 
-		# If ally fainted and switched, stop turn here
 		if ally_hp[ally_active_idx] <= 0:
 			var ended2 = await handle_faint_and_stop_turn()
 			if ended2: return
-			action_panel.show()
+			# If ally fainted, check_and_handle_faint will show switch panel.
+			# After player switches, we return to action panel here:
+			show_action_panel()
 			return
 	else:
 		await enemy_turn()
 
-		# If ally fainted and switched, stop turn here
 		if ally_hp[ally_active_idx] <= 0:
 			var ended3 = await handle_faint_and_stop_turn()
 			if ended3: return
-			action_panel.show()
+			show_action_panel()
 			return
 
 		await ally_active.moves[move_num].use(ally_active, enemy_active, self)
 
-		# If enemy fainted and switched, stop turn here
 		if enemy_hp[enemy_active_idx] <= 0:
 			var ended4 = await handle_faint_and_stop_turn()
 			if ended4: return
-			action_panel.show()
+			show_action_panel()
 			return
 
-	action_panel.show()
+	show_action_panel()
 
 
-# Helper that performs the faint messaging/switching and returns true if battle ended.
-# Used to "stop turn" after a KO.
 func handle_faint_and_stop_turn() -> bool:
-	# If either side is fainted, do the switch / win / lose flow.
-	# This will switch, update UI, and then we return to action_panel without extra attacks.
-	# (Battle end still quits.)
 	if enemy_hp[enemy_active_idx] <= 0 or ally_hp[ally_active_idx] <= 0:
 		return await check_and_handle_faint()
 	return false
@@ -446,9 +580,21 @@ func _on_run_pressed() -> void:
 	await textbox_closed
 	get_tree().quit()
 
+func _on_switch_pressed():
+	if forcing_switch:
+		return
+
+	if not can_switch_now():
+		display_text("No other Pokémon can battle!")
+		await textbox_closed
+		show_action_panel()
+		return
+
+	refresh_switch_buttons()
+	show_switch_panel()
+
 func _on_attack_pressed() -> void:
-	action_panel.hide()
-	move_panel.show()
+	show_move_panel()
 
 func _on_move_1_pressed() -> void: await do_turn(0)
 func _on_move_2_pressed() -> void: await do_turn(1)

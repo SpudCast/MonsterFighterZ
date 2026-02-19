@@ -231,7 +231,10 @@ static func get_stab(move_type: int, attacker_types: Array[int]) -> float:
 static func get_effectiveness_text(mult: float) -> String:
 	if mult == 0:
 		return "It doesn't affect the target..."
-	elif mult >= 2.0:
+	elif mult == 4.0:
+		return "It's extremely effective!"
+	elif mult == 2.0:
+		print(mult)
 		return "It's super effective!"
 	elif mult < 1.0:
 		return "It's not very effective..."

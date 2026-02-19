@@ -1,0 +1,30 @@
+[gd_resource type="Resource" load_steps=8 format=3 uid="uid://ddfbyg1i6r1q8"]
+
+[ext_resource type="Texture2D" uid="uid://dfh4rtr1t61da" path="res://Assets/Amperegrine_Back.png" id="1_f6x0i"]
+[ext_resource type="Resource" uid="uid://cobub0vifesn1" path="res://Resources/Moves/Earthquake.tres" id="2_u5cil"]
+[ext_resource type="Resource" uid="uid://coxj8xm56ind1" path="res://Resources/Moves/HealPulse.tres" id="3_oild2"]
+[ext_resource type="Resource" uid="uid://cmnueeyut2jdp" path="res://Resources/Moves/Outrage.tres" id="4_vmipc"]
+[ext_resource type="Resource" uid="uid://4rl6b3ox0en3" path="res://Resources/Moves/Tackle.tres" id="5_ne3l0"]
+[ext_resource type="Script" path="res://Scripts/BaseMon.gd" id="6_8twwy"]
+[ext_resource type="Texture2D" uid="uid://bt5axenwmfm1c" path="res://Assets/Amperegrine_Front.png" id="7_h2ym2"]
+
+[resource]
+script = ExtResource("6_8twwy")
+name = "Amperegrine"
+types = Array[int]([4, 9])
+level = 50
+texture = ExtResource("7_h2ym2")
+back_texture = ExtResource("1_f6x0i")
+base_health = 90
+base_attack = 135
+base_defense = 80
+base_speed = 135
+IV_health = 0
+IV_attack = 0
+IV_defense = 0
+IV_speed = 0
+EV_health = 0
+EV_attack = 0
+EV_defense = 0
+EV_speed = 0
+moves = Array[Resource("res://Scripts/move.gd")]([ExtResource("2_u5cil"), ExtResource("3_oild2"), ExtResource("4_vmipc"), ExtResource("5_ne3l0")])

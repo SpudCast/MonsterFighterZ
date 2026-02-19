@@ -1,23 +1,46 @@
-[gd_scene load_steps=17 format=3 uid="uid://djgtaewrhqfsp"]
+[gd_scene load_steps=19 format=3 uid="uid://djgtaewrhqfsp"]
 
 [ext_resource type="Script" path="res://Scripts/battle.gd" id="1_4lqdi"]
 [ext_resource type="Resource" uid="uid://b7uoad3u4lon4" path="res://Resources/Pokemon/Moosigo.tres" id="3_7hfpx"]
 [ext_resource type="Texture2D" uid="uid://bx52rwlwtv1sh" path="res://Assets/haxorus.png" id="3_dddu2"]
-[ext_resource type="Texture2D" uid="uid://dfljhpteoarfu" path="res://Assets/background4.png" id="3_v1vqk"]
 [ext_resource type="Texture2D" uid="uid://dry2488vj04hy" path="res://Assets/krookodile.png" id="4_hahno"]
+[ext_resource type="Resource" uid="uid://yfemcrvm5wgr" path="res://Resources/Pokemon/Ozelotel.tres" id="4_pqskv"]
+[ext_resource type="Texture2D" uid="uid://bnf1lpgherydp" path="res://Assets/background.png" id="5_tt2ba"]
+[ext_resource type="Texture2D" uid="uid://bj2pv0xu4qn4a" path="res://Assets/GrassPatch.png" id="6_fcokw"]
 [ext_resource type="Texture2D" uid="uid://b2vjcj78i3swx" path="res://Assets/hud.png" id="6_mdhps"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3fwri"]
 bg_color = Color(0.92549, 0, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c431m"]
 bg_color = Color(0, 0.8, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5taav"]
 bg_color = Color(0.92549, 0, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vi1ml"]
 bg_color = Color(0, 0.8, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Animation" id="Animation_qol6p"]
 length = 0.001
@@ -127,8 +150,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4lqdi")
-enemy = ExtResource("3_7hfpx")
-ally = ExtResource("3_7hfpx")
+ally_team = Array[Resource]([ExtResource("3_7hfpx"), ExtResource("4_pqskv")])
+enemy_team = Array[Resource]([ExtResource("4_pqskv"), ExtResource("3_7hfpx")])
 
 [node name="Background" type="Control" parent="."]
 anchors_preset = 0
@@ -140,14 +163,32 @@ texture_filter = 1
 layout_mode = 0
 offset_top = 1.0
 offset_right = 1152.0
-offset_bottom = 649.0
-texture = ExtResource("3_v1vqk")
+offset_bottom = 648.0
+texture = ExtResource("5_tt2ba")
 expand_mode = 1
+
+[node name="TextureRect" type="TextureRect" parent="Background"]
+layout_mode = 0
+offset_left = 69.0
+offset_top = 226.0
+offset_right = 634.0
+offset_bottom = 791.0
+texture = ExtResource("6_fcokw")
+
+[node name="TextureRect2" type="TextureRect" parent="Background"]
+layout_mode = 0
+offset_left = 674.0
+offset_top = 119.0
+offset_right = 1068.0
+offset_bottom = 513.0
+texture = ExtResource("6_fcokw")
 
 [node name="EnemyHud" type="Control" parent="."]
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 11.0
+offset_top = 8.0
+offset_right = 51.0
+offset_bottom = 48.0
 
 [node name="HudBackground" type="TextureRect" parent="EnemyHud"]
 layout_mode = 2
@@ -179,6 +220,8 @@ offset_left = 46.0
 offset_top = 28.0
 offset_right = 158.0
 offset_bottom = 56.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
 text = "[NAME] "
 
 [node name="Level" type="Label" parent="EnemyHud"]
@@ -187,15 +230,17 @@ offset_left = 45.0
 offset_top = 53.0
 offset_right = 237.0
 offset_bottom = 76.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
 text = "lvl: [level]"
 
 [node name="AllyHud" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 754.0
-offset_top = 400.0
-offset_right = 794.0
-offset_bottom = 440.0
+offset_left = 744.0
+offset_top = 382.0
+offset_right = 784.0
+offset_bottom = 422.0
 
 [node name="HudBackground" type="TextureRect" parent="AllyHud"]
 layout_mode = 2
@@ -228,6 +273,8 @@ offset_left = 45.0
 offset_top = 27.0
 offset_right = 157.0
 offset_bottom = 55.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
 text = "[NAME] "
 
 [node name="Level" type="Label" parent="AllyHud"]
@@ -236,6 +283,8 @@ offset_left = 44.0
 offset_top = 52.0
 offset_right = 236.0
 offset_bottom = 75.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
 text = "lvl: [level]"
 
 [node name="EnemyContainer" type="VBoxContainer" parent="."]
@@ -270,10 +319,9 @@ texture = ExtResource("4_hahno")
 
 [node name="ActionPanel" type="Panel" parent="."]
 layout_mode = 0
-offset_left = -17.0
-offset_top = 535.0
-offset_right = 1166.0
-offset_bottom = 656.0
+offset_top = 527.0
+offset_right = 1152.0
+offset_bottom = 648.0
 
 [node name="Actions" type="HBoxContainer" parent="ActionPanel"]
 layout_mode = 1
@@ -311,10 +359,9 @@ text = "Run"
 
 [node name="MovePanel" type="Panel" parent="."]
 layout_mode = 0
-offset_left = -11.0
-offset_top = 534.0
-offset_right = 1161.0
-offset_bottom = 651.0
+offset_top = 528.0
+offset_right = 1152.0
+offset_bottom = 648.0
 
 [node name="Actions" type="HBoxContainer" parent="MovePanel"]
 layout_mode = 1
@@ -349,10 +396,9 @@ text = "Move 4"
 
 [node name="Textbox" type="Panel" parent="."]
 layout_mode = 0
-offset_left = -1.0
-offset_top = 533.0
-offset_right = 1163.0
-offset_bottom = 655.0
+offset_top = 528.0
+offset_right = 1152.0
+offset_bottom = 648.0
 
 [node name="Label" type="Label" parent="Textbox"]
 layout_mode = 1
